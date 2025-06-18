@@ -334,4 +334,38 @@ body {
         text-align: center;
         gap: 1rem;
     }
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    .history h2 {
+        font-size: 1em;
+    }
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+    }
+    .score-details p {
+        font-size: 11px;
+    }
+    .score-details ul {
+        list-style: none;
+        margin: 0;
+    }
+    .score-details ul li {
+        color: var(--tertiary-color);
+        font-size: 11px;
+    }
 }

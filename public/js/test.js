@@ -15,7 +15,7 @@ if (!sessionStorage.getItem('isLoggedIn')) {
 let currentSectionIndex = 0;
 let currentQuestionIndex = 0;
 const sections = ['listening', 'structure', 'reading'];
-const timeLimits = { listening: 1 * 60, structure: 30 * 60, reading: 30 * 60 };
+const timeLimits = { listening: 30 * 60, structure: 40 * 60, reading: 50 * 60 };
 const cnv = {
     listening: { min: 24, max: 68 },
     structure: { min: 20, max: 68 },

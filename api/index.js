@@ -1,55 +1,46 @@
 const express = require('express');
-const mongoose = require('mongoose'); // Import mongoose
+const mongoose = require('mongoose'); 
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000; // Menggunakan process.env.PORT untuk kompatibilitas Vercel
-require('dotenv').config(); // Memuat variabel lingkungan dari file .env
+const PORT = process.env.PORT || 3000; 
+require('dotenv').config(); 
 
-// --- Konfigurasi Koneksi MongoDB ---
-// Ganti dengan connection string MongoDB Atlas Anda (dari Langkah 1.5)
-// Ambil dari variabel lingkungan untuk keamanan dan fleksibilitas deployment
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Pastikan MONGODB_URI ada
 if (!MONGODB_URI) {
     console.error('ERROR: MONGODB_URI tidak ditemukan di environment variables.');
     console.error('Pastikan Anda telah membuat file .env di root proyek Anda dengan MONGODB_URI.');
-    process.exit(1); // Hentikan aplikasi jika URI tidak ada
+    process.exit(1); 
 }
 
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('Terhubung ke MongoDB Atlas dengan sukses!'))
     .catch(err => {
         console.error('Gagal terhubung ke MongoDB Atlas:', err.message);
-        // Penting: Hentikan aplikasi jika koneksi database gagal agar tidak berjalan tanpa database
         process.exit(1);
     });
 
-// --- Definisi Schema dan Model Pengguna (Menggantikan users.json) ---
-// Ini mendefinisikan struktur dokumen pengguna di koleksi 'users' MongoDB Anda.
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true }, // email harus unik
+    email: { type: String, required: true, unique: true }, 
     password: { type: String, required: true },
-    avatar: { type: String, default: null }, // Avatar disimpan sebagai Base64 string atau URL
-    toeflHistory: [ // Array untuk menyimpan riwayat tes
+    avatar: { type: String, default: null },
+    toeflHistory: [ 
         {
             date: { type: String, required: true },
-            scores: { // Objek skor per bagian
+            scores: {
                 listening: { raw: Number, total: Number, converted: Number },
                 structure: { raw: Number, total: Number, converted: Number },
                 reading: { raw: Number, total: Number, converted: Number }
             },
             finalScore: { type: Number, required: true },
-            userAnswers: { type: Object } // Menyimpan jawaban pengguna untuk ulasan
+            userAnswers: { type: Object } 
         }
     ]
-}, { timestamps: true }); // Opsi timestamps: menambahkan createdAt dan updatedAt secara otomatis
+}, { timestamps: true });
 
-const User = mongoose.model('User', userSchema); // Model 'User' akan berinteraksi dengan koleksi 'users'
+const User = mongoose.model('User', userSchema);
 
-// --- Middleware Global Express ---
-// Meningkatkan batas ukuran payload untuk menangani gambar Base64 (misalnya 50MB)
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 

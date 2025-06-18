@@ -106,3 +106,22 @@ if (questions[section] && questions[section].length > 0) {
 }
 });
 })
+
+const menu = document.querySelector('.nav-links');
+const hamburger = document.querySelector('.hamburger');
+const faBars = document.querySelector('.hamburger .bars');
+const faClose = document.querySelector('.hamburger .close'); 
+
+hamburger.addEventListener('click', () => {
+    menu.classList.toggle('open');
+    
+    const isOpen = menu.classList.contains('open');
+    
+    if (isOpen) {
+        faBars.style.display = 'none';
+        faClose.style.display = 'block'; 
+    } else {
+        faBars.style.display = 'block';
+        faClose.style.display = 'none';
+    }
+});

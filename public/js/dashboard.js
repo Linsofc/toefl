@@ -141,7 +141,7 @@ function generateCertificate(data) {
         });
 
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
+        pdf.addImage(imgData, 'JPEG', 0, 0, h, w);
         pdf.save(`Certificate_TOEFL_${data.name}.pdf`);
     }).catch(error => {
         console.error('Error generating certificate:', error);

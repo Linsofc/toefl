@@ -305,3 +305,64 @@ audio {
         padding: 1rem 1.5rem;
     }
 }
+
+
+@media (max-width: 768px) {
+    .test-container {
+        width: 90%;
+    }
+    .modal-content {
+        width: 80%;
+    }
+    .modal-content h2 {
+        margin-bottom: 1em;
+    }
+    .modal-content p {
+        margin-bottom: 1.5rem;
+        font-size: 0.8em;
+    }
+    .question-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .question-nav-content {
+        padding: 1rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #prev-btn, #jump-to-btn, #next-btn, #finish-section-btn {
+        padding: 7px 11px;
+        border-radius: 15px;
+        font-size: 0.5em;
+    }
+    .question-area {
+        font-size: 0.8em;
+    }
+    .test-header h1 {
+        font-size: 1em;
+    }
+    .test-header .timer {
+        font-size: 1em;
+    }
+    .test-container {
+        width: 90%;
+    }
+    .modal-content {
+        width: 80%;
+    }
+    .modal-content h2 {
+        margin-bottom: 1em;
+    }
+    .modal-content p {
+        margin-bottom: 1.5rem;
+        font-size: 0.8em;
+    }
+    .question-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .question-nav-content {
+        padding: 1rem 1.5rem;
+    }
+}
