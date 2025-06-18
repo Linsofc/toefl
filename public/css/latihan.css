@@ -1,0 +1,112 @@
+:root {
+    --primary-color: #0052cc;
+    --secondary-color: #ff8b00;
+    --dark-color: #212529;
+    --light-color: #f4f7fc;
+    --white-color: #ffffff;
+    --font-family: sans-serif;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --box-shadow-hover: 0 8px 25px rgba(0, 82, 204, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+/* --- Practice Menu Styles --- */
+.practice-container {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.practice-header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+
+
+.practice-header p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 4rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.practice-grid .animate-on-scroll:nth-child(1){
+    transition-delay: 0.2s;
+}
+.practice-grid .animate-on-scroll:nth-child(2){
+    transition-delay: 0.4s;
+}
+.practice-grid .animate-on-scroll:nth-child(3){
+    transition-delay: 0.6s;
+}
+
+.practice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.practice-card {
+    background-color: var(--white-color);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.practice-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--box-shadow-hover);
+}
+
+.card-icon {
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.practice-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.practice-card p {
+    color: #6c757d;
+    flex-grow: 1;
+    margin-bottom: 2rem;
+}
+
+.full-test-card {
+    background: linear-gradient(45deg, var(--primary-color), #007bff);
+    color: var(--white-color);
+    grid-column: 1 / -1;
+}
+
+.full-test-card .card-icon {
+    color: var(--white-color);
+}
+
+.full-test-card p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.full-test-card:hover {
+    transform: translateY(-5px) scale(1.02);
+}

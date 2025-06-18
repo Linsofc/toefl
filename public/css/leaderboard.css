@@ -1,0 +1,135 @@
+body {
+    font-family: sans-serif;
+    background-color: #f4f7f6;
+}
+
+.leaderboard-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.leaderboard-container h1 {
+    text-align: center;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.leaderboard-container h1 .fa-trophy {
+    color: #f1c40f;
+}
+
+.leaderboard-container .subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rank-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.rank-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #888;
+    width: 50px;
+    text-align: center;
+}
+
+.rank-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 15px;
+    margin-right: 20px;
+    border: 2px solid #eee;
+}
+
+.rank-user {
+    flex-grow: 1;
+}
+
+.rank-user .user-name {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.rank-user .user-email {
+    font-size: 0.85rem;
+    color: #999;
+    margin: 0;
+}
+
+.rank-score {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #512da8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rank-item:nth-child(1) {
+    background: linear-gradient(135deg, #fffbeb, #fff);
+    border-color: #f1c40f;
+}
+.rank-item:nth-child(2) {
+    background: linear-gradient(135deg, #f8f9fa, #fff);
+    border-color: #c0c0c0;
+}
+.rank-item:nth-child(3) {
+    background: linear-gradient(135deg, #fff6f2, #fff);
+    border-color: #cd7f32;
+}
+
+.rank-score .fa-medal {
+    font-size: 2rem;
+}
+
+.rank-item:nth-child(1) .fa-medal { color: #f1c40f; }
+.rank-item:nth-child(2) .fa-medal { color: #c0c0c0; }
+.rank-item:nth-child(3) .fa-medal { color: #cd7f32; }
+
+/* Loading Spinner */
+.loading-spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #512da8;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 50px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none;
+}

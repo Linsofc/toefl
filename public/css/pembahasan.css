@@ -1,0 +1,135 @@
+body {
+    background-color: #f4f7f6;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.review-page-container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.review-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.review-header h1 {
+    color: #333;
+    font-weight: 700;
+}
+.review-header h1 .fa-book-reader {
+    color: #6a11cb;
+}
+
+.score-summary-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.review-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.review-card-header {
+    padding: 15px 20px;
+    background-color: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    color: #555;
+}
+
+.review-card-body {
+    padding: 20px;
+}
+
+.review-card-body .question-text {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.review-card-body .options-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.review-card-body .options-list li {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 40px;
+}
+
+.review-card-body .options-list .icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Gaya untuk jawaban */
+.correct-answer {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    font-weight: bold;
+}
+
+.incorrect-answer {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    font-weight: bold;
+}
+
+.explanation-box {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffeeba;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.explanation-box h4 {
+    margin: 0 0 10px 0;
+    color: #856404;
+}
+
+.back-to-dashboard {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Buka css/pembahasan.css dan tambahkan kode ini di akhir */
+
+.user-answer-display {
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background-color: #f0f2f5;
+    border: 1px solid #e0e0e0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.user-answer-display .unanswered-text {
+    color: #777;
+    font-style: italic;
+}

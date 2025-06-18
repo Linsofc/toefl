@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register - TOEFL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <!-- Smart English Orientation (SEO) -->
+    <link rel="icon" href="./assets/images/seo.png" type="image/png">
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form id="registerForm">
+                <h1>Buat Akun</h1>
+                <input type="text" id="registerName" placeholder="Nama" required>
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button type="submit">Daftar</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form id="loginForm">
+                <h1>Masuk</h1>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <a href="#" id="forgotPasswordLink">Lupa Password Anda?</a>
+                <button type="submit">Masuk</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Selamat Datang Kembali!</h1>
+                    <p>Masukkan detail personal Anda untuk menggunakan semua fitur situs TOEFL</p>
+                    <button class="hidden" id="login">Masuk</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Halo, Kawan!</h1>
+                    <p>Daftar dengan detail personal Anda untuk menggunakan semua fitur situs TOEFL</p>
+                    <button class="hidden" id="register">Daftar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Reset Password</h2>
+            <form id="resetPasswordForm">
+                <div class="form-group" id="emailCheckContainer">
+                    <label for="resetEmail" style="font-size: 0.7em;">Masukkan Email Anda:</label>
+                    <input type="email" id="resetEmail" required>
+                    <button type="button" id="findAccountBtn">Cari Akun</button>
+                </div>
+                <div class="form-group" id="newPasswordContainer" style="display: none;">
+                    <label for="newPassword">Password Baru:</label>
+                    <input type="password" id="newPassword" required>
+                    <label for="confirmPassword">Konfirmasi Password Baru:</label>
+                    <input type="password" id="confirmPassword" required>
+                    <button type="submit">Simpan Password Baru</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification-toast" class="toast">
+        <i id="toast-icon" class="fas"></i>
+        <span id="toast-message">Ini adalah pesan notifikasi.</span>
+    </div>
+
+    <script src="./js/login.js"></script>
+</body>
+</html>

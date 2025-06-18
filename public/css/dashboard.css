@@ -1,0 +1,337 @@
+:root {
+    --primary-color: #0052cc;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --white-color: #ffffff;
+    --font-family: sans-serif;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+/* --- Dashboard Page --- */
+.dashboard {
+    padding-top: 4rem;
+}
+
+.profile-card {
+    margin-top: 50px;
+    text-align: center;
+    background: var(--white-color);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin: 30px auto;
+}
+
+.profile-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    float: left;
+    margin-right: 1.5rem;
+}
+
+.history {
+    background: var(--white-color);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 2rem;
+}
+
+.history h2,
+.profile-card h2 {
+    margin-bottom: 1rem;
+}
+
+.history-card {
+    border: 1px solid #eee;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.score-summary .final-score {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.score-details ul {
+    list-style: none;
+    margin: 0.5rem 0;
+}
+.score-details ul li {
+    color: var(--tertiary-color);
+}
+
+/* Edit Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+}
+.form-group {
+    margin-bottom: 12px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.cancel-btn {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+.cancel-btn:hover {
+    background-color: red;
+    color: var(--light-color);
+    cursor: pointer;
+}
+
+/* Sertifikat */
+.btn-review {
+    background-color: rgb(211, 176, 18);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-review:hover {
+    background-color: rgb(192, 160, 17);
+}
+.btn-certificate {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-certificate:hover {
+    background-color: #218838;
+}
+
+/* --- Styling untuk Template Sertifikat --- */
+.certificate-template {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1056px; 
+    height: 1100px;
+    background: white;
+    font-family: var(--font-family);
+    padding: 40px;
+}
+
+.cert-border {
+    position: relative;
+    border: 10px solid  #d4af37;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+}
+
+.cert-border::after {
+    position: absolute;
+    content: "";
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 5px solid #555;
+}
+
+.cert-header {
+    text-align: center;
+}
+
+.cert-logo {
+    width: 80px;
+    margin: 15px 0px;
+}
+
+.cert-header h1 {
+    font-size: 48px;
+    color: #0052CC;
+    margin: 0;
+}
+
+.cert-body {
+    text-align: center;
+}
+
+.cert-body > p {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.cert-body h2 {
+    font-size: 44px;
+    font-family: 'Brush Script MT', cursive; 
+    color: #FF8B00; 
+    margin: 15px 0;
+}
+
+.cert-score-table {
+    width: 80%;
+    margin: 25px auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.cert-score-table th,
+.cert-score-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 18px;
+}
+
+.cert-score-table th {
+    background-color: #f2f2f2;
+}
+
+.cert-score-table td:first-child {
+    text-align: left;
+}
+
+.cert-score-table td:last-child {
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--primary-color); 
+}
+
+.cert-final-score-container {
+    margin-top: 20px;
+    background-color: #e6f0ff; 
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 10px;
+    display: inline-block;
+}
+
+.cert-final-score-container span {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.cert-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.signature {
+    display: inline-block;
+    text-align: center;
+}
+
+.signature span {
+    font-size: 22px;
+    font-family: 'Brush Script MT', cursive;
+}
+
+.signature hr {
+    border: 1px solid #333;
+    margin-top: 5px;
+}
+
+.signature p {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+/* Notivikasi */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 9999;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0); 
+}
+
+.toast.success {
+    background-color: #4CAF50; 
+}
+
+.toast.error {
+    background-color: #f44336;
+}
+
+.toast i {
+    font-size: 1.5rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .history-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}

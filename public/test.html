@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - TOEFL.id</title>
+    <link rel="stylesheet" href="css/test.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Smart English Orientation (SEO) -->
+    <link rel="icon" href="./assets/images/seo.png" type="image/png">
+</head>
+<body>
+    <div class="test-container">
+        <header class="test-header">
+            <h1 id="section-title">Listening Section</h1>
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span id="time">00:00</span>
+            </div>
+        </header>
+
+        <main class="question-area">
+            <div id="audio-player-area" class="audio-player-area"></div>
+            <div id="passage-area" class="passage-area"></div>
+            <div class="question-content">
+                <p id="question-number">Question 1 of 50</p>
+                <p id="question-text">The question will appear here.</p>
+            </div>
+            <div class="options-container" id="options-container"></div>
+        </main>
+
+        <footer class="test-navigation">
+            <button id="prev-btn" class="btn btn-red">Previous</button>
+            <button id="jump-to-btn" class="btn btn-secondary"><i class="fas fa-th-list"></i> Nomor Soal</button>
+            <button id="next-btn" class="btn btn-primary">Next</button>
+            <button id="finish-section-btn" class="btn btn-secondary" style="display: none;">Finish Section</button>
+        </footer>
+    </div>
+
+    <div id="welcome-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Selamat Datang di Simulasi Tes TOEFL</h2>
+            <p>Tes ini terdiri dari 3 sesi: Listening, Structure, and Reading. Setiap sesi memiliki batas waktu. Pastikan koneksi Anda stabil.</p>
+            <p>Klik "Mulai" untuk memulai sesi pertama.</p>
+            <a href="./index.html"><button class="btn btn-secondary" style="cursor: pointer;">Cancel</button></a>
+            <button id="start-test-btn" class="btn btn-primary" style="cursor: pointer;">Mulai</button>
+        </div>
+    </div>
+
+    <div id="question-nav-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>Pilih Nomor Soal</h3>
+            <div id="question-grid" class="question-grid">
+                </div>
+            <button id="close-nav-modal-btn" class="btn btn-primary" style="margin-top: 20px;">Tutup</button>
+        </div>
+    </div>
+
+    <div id="notification-toast" class="toast">
+        <i id="toast-icon" class="fas"></i>
+        <span id="toast-message">Ini adalah pesan notifikasi.</span>
+    </div>
+
+    <script src="js/questions.js"></script>
+    <script src="js/test.js"></script>
+</body>
+</html>
