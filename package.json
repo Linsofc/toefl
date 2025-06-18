@@ -1,24 +1,27 @@
 {
   "name": "hosting-toefl",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node api/index"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Linsofc/dpw-project-akhir.git"
+    "url": "git+https://github.com/Linsofc/toefl.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Linsofc/dpw-project-akhir/issues"
+    "url": "https://github.com/Linsofc/toefl/issues"
   },
-  "homepage": "https://github.com/Linsofc/dpw-project-akhir#readme",
+  "homepage": "https://github.com/Linsofc/toefl#readme",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.0"
   }
 }

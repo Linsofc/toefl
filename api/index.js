@@ -2,24 +2,36 @@ const express = require('express');
 const mongoose = require('mongoose'); // Import mongoose
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000; // Gunakan process.env.PORT untuk Vercel
-require('dotenv').config(); // Opsional: untuk membaca .env file
+const PORT = process.env.PORT || 3000; // Menggunakan process.env.PORT untuk kompatibilitas Vercel
+require('dotenv').config(); // Memuat variabel lingkungan dari file .env
 
-// --- Konfigurasi MongoDB ---
-// Ganti dengan connection string MongoDB Atlas Anda
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://linsofc:<db_password>@cluster0.obvnn7l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// --- Konfigurasi Koneksi MongoDB ---
+// Ganti dengan connection string MongoDB Atlas Anda (dari Langkah 1.5)
+// Ambil dari variabel lingkungan untuk keamanan dan fleksibilitas deployment
+const MONGODB_URI = process.env.MONGODB_URI;
+
+// Pastikan MONGODB_URI ada
+if (!MONGODB_URI) {
+    console.error('ERROR: MONGODB_URI tidak ditemukan di environment variables.');
+    console.error('Pastikan Anda telah membuat file .env di root proyek Anda dengan MONGODB_URI.');
+    process.exit(1); // Hentikan aplikasi jika URI tidak ada
+}
 
 mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Terhubung ke MongoDB Atlas'))
-    .catch(err => console.error('Gagal terhubung ke MongoDB Atlas:', err));
+    .then(() => console.log('Terhubung ke MongoDB Atlas dengan sukses!'))
+    .catch(err => {
+        console.error('Gagal terhubung ke MongoDB Atlas:', err.message);
+        // Penting: Hentikan aplikasi jika koneksi database gagal agar tidak berjalan tanpa database
+        process.exit(1);
+    });
 
-// --- Definisi Schema dan Model Pengguna ---
-// Ini akan mendefinisikan struktur dokumen pengguna di MongoDB
+// --- Definisi Schema dan Model Pengguna (Menggantikan users.json) ---
+// Ini mendefinisikan struktur dokumen pengguna di koleksi 'users' MongoDB Anda.
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true }, // email harus unik
     password: { type: String, required: true },
-    avatar: { type: String, default: null },
+    avatar: { type: String, default: null }, // Avatar disimpan sebagai Base64 string atau URL
     toeflHistory: [ // Array untuk menyimpan riwayat tes
         {
             date: { type: String, required: true },
@@ -32,49 +44,40 @@ const userSchema = new mongoose.Schema({
             userAnswers: { type: Object } // Menyimpan jawaban pengguna untuk ulasan
         }
     ]
-}, { timestamps: true }); // Menambahkan createdAt dan updatedAt secara otomatis
+}, { timestamps: true }); // Opsi timestamps: menambahkan createdAt dan updatedAt secara otomatis
 
-const User = mongoose.model('User', userSchema); // Model 'User' akan berinteraksi dengan koleksi 'users' di MongoDB
+const User = mongoose.model('User', userSchema); // Model 'User' akan berinteraksi dengan koleksi 'users'
 
-
-// --- 1. Middleware Global (JSON Body Parser & URL-encoded) ---
+// --- Middleware Global Express ---
+// Meningkatkan batas ukuran payload untuk menangani gambar Base64 (misalnya 50MB)
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// --- 2. Helper Functions (getUsers, saveUsers) - TIDAK DIPERLUKAN LAGI UNTUK users.json ---
-// Anda bisa menghapus fungsi getUsers dan saveUsers yang sebelumnya berinteraksi dengan fs/users.json
-// karena sekarang kita akan berinteraksi langsung dengan MongoDB melalui Mongoose.
-// const usersFilePath = path.join(__dirname, 'databases', 'users.json');
-// function getUsers() { /* ... */ } // HAPUS INI
-// function saveUsers(users) { /* ... */ } // HAPUS INI
-
-
-// --- 3. DEFINISI SEMUA ENDPOINT API ANDA DI SINI ---
-// Sekarang menggunakan Model 'User' untuk berinteraksi dengan MongoDB.
+// --- Definisi Semua Endpoint API Anda (Menggunakan Mongoose) ---
+// Urutan ini SANGAT PENTING: API routes harus sebelum static file serving.
 
 // Endpoint API untuk Registrasi Pengguna
-app.post('/api/register', async (req, res) => { // Tambahkan 'async'
+app.post('/api/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        const existingUser = await User.findOne({ email: email }); // Cari di MongoDB
+        const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res.status(409).json({ message: 'Email sudah terdaftar.', type: 'error' });
         }
-        const newUser = new User({ name, email, password }); // Buat instance User baru
-        await newUser.save(); // Simpan ke MongoDB
+        const newUser = new User({ name, email, password });
+        await newUser.save(); // Simpan pengguna baru ke MongoDB
         res.status(201).json({ message: 'Pendaftaran berhasil! Silakan masuk.', type: 'success' });
     } catch (error) {
-        console.error('Error during registration:', error);
+        console.error('Error during registration:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat pendaftaran.', type: 'error' });
     }
 });
 
 // Endpoint API untuk Login Pengguna
-app.post('/api/login', async (req, res) => { // Tambahkan 'async'
+app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Cari pengguna berdasarkan email dan password
-        const user = await User.findOne({ email: email, password: password }); // Cari di MongoDB
+        const user = await User.findOne({ email: email, password: password });
         if (user) {
             console.log(`[${new Date().toISOString()}] Login berhasil untuk pengguna: ${user.name}`);
             res.status(200).json({
@@ -87,32 +90,32 @@ app.post('/api/login', async (req, res) => { // Tambahkan 'async'
             res.status(401).json({ message: 'Email atau password salah.', type: 'error' });
         }
     } catch (error) {
-        console.error('Error during login:', error);
+        console.error('Error during login:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat login.', type: 'error' });
     }
 });
 
 // Endpoint API untuk Mencari Akun (Reset Password - Langkah 1)
-app.post('/api/find-account', async (req, res) => { // Tambahkan 'async'
+app.post('/api/find-account', async (req, res) => {
     const { email } = req.body;
     try {
-        const userExists = await User.exists({ email: email }); // Cek keberadaan pengguna di MongoDB
+        const userExists = await User.exists({ email: email });
         if (userExists) {
             res.status(200).json({ message: 'Akun ditemukan. Silakan masukkan password baru Anda.', type: 'success' });
         } else {
             res.status(404).json({ message: 'Email tidak ditemukan!', type: 'error' });
         }
     } catch (error) {
-        console.error('Error finding account:', error);
+        console.error('Error finding account:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat mencari akun.', type: 'error' });
     }
 });
 
 // Endpoint API untuk Reset Password
-app.post('/api/reset-password', async (req, res) => { // Tambahkan 'async'
+app.post('/api/reset-password', async (req, res) => {
     const { email, newPassword } = req.body;
     try {
-        const user = await User.findOneAndUpdate( // Temukan dan perbarui di MongoDB
+        const user = await User.findOneAndUpdate(
             { email: email },
             { $set: { password: newPassword } },
             { new: true } // Mengembalikan dokumen yang sudah diperbarui
@@ -122,22 +125,22 @@ app.post('/api/reset-password', async (req, res) => { // Tambahkan 'async'
         }
         res.status(200).json({ message: 'Password berhasil diubah! Silakan login dengan password baru Anda.', type: 'success' });
     } catch (error) {
-        console.error('Error resetting password:', error);
+        console.error('Error resetting password:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat mereset password.', type: 'error' });
     }
 });
 
 // Endpoint API untuk Menyimpan Hasil Tes
-app.post('/api/save-test-result', async (req, res) => { // Tambahkan 'async'
+app.post('/api/save-test-result', async (req, res) => {
     const { email, testResult } = req.body;
     if (!email || !testResult) {
         return res.status(400).json({ message: 'Data yang tidak lengkap untuk menyimpan hasil tes.', type: 'error' });
     }
     try {
-        const user = await User.findOneAndUpdate( // Temukan dan perbarui di MongoDB
+        const user = await User.findOneAndUpdate(
             { email: email },
             { $push: { toeflHistory: testResult } }, // Menambahkan ke array toeflHistory
-            { new: true, upsert: false } // Mengembalikan dokumen yang diperbarui
+            { new: true, upsert: false } // Mengembalikan dokumen yang diperbarui, jangan buat jika tidak ada
         );
         if (!user) {
             return res.status(404).json({ message: 'Pengguna tidak ditemukan.', type: 'error' });
@@ -148,29 +151,29 @@ app.post('/api/save-test-result', async (req, res) => { // Tambahkan 'async'
             updatedUser: user // Kirim objek user yang sudah diupdate dari MongoDB
         });
     } catch (error) {
-        console.error('Error saving test result:', error);
+        console.error('Error saving test result:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat menyimpan hasil tes.', type: 'error' });
     }
 });
 
 // Endpoint API untuk Update Profil Pengguna
-app.post('/api/update-profile', async (req, res) => { // Tambahkan 'async'
+app.post('/api/update-profile', async (req, res) => {
     const { currentEmail, newName, newEmail, newAvatar } = req.body;
     if (!currentEmail || !newName || !newEmail) {
         return res.status(400).json({ message: 'Data yang tidak lengkap untuk memperbarui profil.', type: 'error' });
     }
     try {
-        // Cek apakah email baru sudah terdaftar oleh pengguna lain
-        if (currentEmail !== newEmail) { // Hanya cek jika email berubah
+        // Cek apakah email baru sudah terdaftar oleh pengguna lain (jika email berubah)
+        if (currentEmail !== newEmail) {
             const existingUserWithNewEmail = await User.findOne({ email: newEmail });
             if (existingUserWithNewEmail) {
                 return res.status(409).json({ message: 'Email baru sudah terdaftar oleh pengguna lain.', type: 'error' });
             }
         }
 
-        const user = await User.findOneAndUpdate( // Temukan dan perbarui di MongoDB
+        const user = await User.findOneAndUpdate(
             { email: currentEmail },
-            { $set: { name: newName, email: newEmail, avatar: newAvatar } },
+            { $set: { name: newName, email: newEmail, avatar: newAvatar } }, // Gunakan $set untuk memperbarui field
             { new: true } // Mengembalikan dokumen yang sudah diperbarui
         );
 
@@ -184,33 +187,34 @@ app.post('/api/update-profile', async (req, res) => { // Tambahkan 'async'
             updatedUser: user // Kirim objek user yang sudah diupdate dari MongoDB
         });
     } catch (error) {
-        console.error('Error updating profile:', error);
+        console.error('Error updating profile:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat memperbarui profil.', type: 'error' });
     }
 });
 
 // Endpoint API untuk mendapatkan semua data pengguna (untuk Leaderboard)
-app.get('/api/leaderboard', async (req, res) => { // Tambahkan 'async'
+app.get('/api/leaderboard', async (req, res) => {
     try {
-        const users = await User.find({}, 'name email avatar toeflHistory'); // Ambil semua pengguna dari MongoDB, hanya field yang relevan
+        // Hanya ambil field yang relevan dan hindari mengirim password
+        const users = await User.find({}, 'name email avatar toeflHistory');
         res.status(200).json(users);
     } catch (error) {
-        console.error('Error fetching users for leaderboard:', error);
+        console.error('Error fetching users for leaderboard:', error.message);
         res.status(500).json({ message: 'Gagal mengambil data leaderboard.', type: 'error' });
     }
 });
 
+// --- Melayani File Statis ---
+// Ini HARUS ditempatkan DI PALING AKHIR setelah SEMUA DEFINISI API ENDPOINTS Anda.
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html')); // Perbaikan jalur ini
+});
 
 // --- 4. MELAYANI FILE STATIS ---
-// Ini HARUS ditempatkan DI PALING AKHIR setelah SEMUA DEFINISI API ENDPOINTS Anda.
-app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'assets')));
-app.use(express.static(path.join(__dirname, 'components')));
-app.use(express.static(path.join(__dirname, 'css')));
-app.use(express.static(path.join(__dirname, 'js')));
+// Ini HARUS ditempatkan DI PALING AKHIR setelah SEMUA DEFINISI API ENDPOINTS DAN RUTE KHUSUS ANDA.
+app.use(express.static(path.join(__dirname, '../public')))
 
-
-// --- 5. START SERVER ---
+// --- Memulai Server ---
 app.listen(PORT, () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
