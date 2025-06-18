@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Node.js modules
+node_modules/
+
+# Vercel artifacts
+.vercel/
+
+# macOS specific files (optional, if you use macOS)
+.DS_Store
+
+# npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
