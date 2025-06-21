@@ -80,7 +80,6 @@ app.use(session({
 }));
 
 function verifyAdmin(req, res, next) {
-    console.log(req)
     if (req?.session?.user?.isAdmin === true) {
         next();
     } else {
