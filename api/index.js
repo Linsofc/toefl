@@ -115,22 +115,14 @@ app.post('/api/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
             console.log(`[${new Date().toISOString()}] Login berhasil untuk pengguna: ${user.name}`);
-            req.session.regenerate(function (err) {
-                if (err) next(err)
+            
+            req.session.user = {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin 
+            };
 
-                req.session.user = {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    isAdmin: user.isAdmin 
-                };
-                req.session.save(function (err) {
-                    if (err) return next(err)
-                    res.redirect('/admin.html')
-                })
-            })
-            
-            
             res.status(200).json({
                 message: `Login berhasil! Selamat datang, ${user.name}`,
                 user: user,
