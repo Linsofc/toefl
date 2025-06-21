@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bcrypt = require('bcryptjs'); 
 const session = require('express-session');
+const { log } = require('console');
 const app = express();
 const PORT = process.env.PORT || 3000;
 require('dotenv').config();
@@ -70,16 +71,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production'
-    }
+    saveUninitialized: true
 }));
 
 function verifyAdmin(req, res, next) {
-    if (req.session && req.session.user && req.session.user.isAdmin) {
+    console.log(req)
+    if (req?.session?.user?.isAdmin === true) {
         next();
     } else {
         if (req.originalUrl.startsWith('/api/admin') || req.originalUrl === '/api/current-user') {
@@ -118,17 +115,26 @@ app.post('/api/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
             console.log(`[${new Date().toISOString()}] Login berhasil untuk pengguna: ${user.name}`);
-            
-            req.session.user = {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                isAdmin: user.isAdmin 
-            };
+            req.session.regenerate(function (err) {
+                if (err) next(err)
 
+                req.session.user = {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    isAdmin: user.isAdmin 
+                };
+                req.session.save(function (err) {
+                    if (err) return next(err)
+                    res.redirect('/admin.html')
+                })
+            })
+            
+            
             res.status(200).json({
                 message: `Login berhasil! Selamat datang, ${user.name}`,
                 user: user,
+                session: req.session.user,
                 type: 'success'
             });
         } else {
