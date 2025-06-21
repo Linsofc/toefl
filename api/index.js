@@ -71,16 +71,16 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-        maxAge: false,
-        httpOnly: true, 
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production'
     }
 }));
 
 function verifyAdmin(req, res, next) {
-    if (req?.session?.user?.isAdmin === true) {
+    if (req.session && req.session.user && req.session.user.isAdmin === true) {
         next();
     } else {
         if (req.originalUrl.startsWith('/api/admin') || req.originalUrl === '/api/current-user') {
