@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const SESSION_SECRET = process.env.SESSION_SECRET || 'Linsofc788K992g//##810nL'; 
+const SESSION_SECRET = process.env.SESSION_SECRET || 'supersecretkey_for_dev'; 
 
 if (!MONGODB_URI) {
     console.error('ERROR: MONGODB_URI tidak ditemukan di environment variables.');
