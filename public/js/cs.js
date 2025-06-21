@@ -4,6 +4,10 @@ const closeChatBtn = document.getElementById('chat-close-btn');
 const chatForm = document.getElementById('chat-form');
 const chatInput = document.getElementById('chat-input');
 const messagesContainer = document.getElementById('chat-messages');
+const ptext = document.querySelector('.message p')
+const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+
+ptext.innerHTML = `<p>Halo kak ${loggedInUser.name} 🖐️ ${ucapanSelamat()}. Saya asisten AI SEO Ada yang bisa saya bantu?</p>`
 
 openChatBtn.addEventListener('click', () => {
     chatWidget.classList.add('open');
@@ -24,6 +28,36 @@ chatForm.addEventListener('submit', function(e) {
         generateAiResponse(userMessage);
     }, 1000);
 });
+
+function ucapanSelamat() {
+    const now = new Date();
+    const options = {
+        hour: '2-digit',
+        hourCycle: 'h23',
+        timeZone: 'Asia/Jakarta'
+    };
+    
+    const jakartaTimeFormatter = new Intl.DateTimeFormat('en-US', options);
+    const jakartaTimeParts = jakartaTimeFormatter.formatToParts(now);
+    
+    let hour = 0;
+    for (const part of jakartaTimeParts) {
+        if (part.type === 'hour') {
+            hour = parseInt(part.value, 10);
+            break;
+        }
+    }
+
+    if (hour >= 5 && hour < 12) {
+        return "Selamat Pagi 🌄";
+    } else if (hour >= 12 && hour < 15) {
+        return "Selamat Siang 🌞";
+    } else if (hour >= 15 && hour < 18) {
+        return "Selamat Sore 🌇";
+    } else {
+        return "Selamat Malam 🌙";
+    }
+}
 
 async function getBotResponse(userMessage) {
     let _body = {
@@ -63,6 +97,31 @@ async function getBotResponse(userMessage) {
     }
 }
 
+
+async function geminiAi(message){
+    try {
+        const response = await fetch('/api/gemini-chat', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message }) 
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            return data.response; 
+        } else {
+            console.error('Error dari backend Gemini API:', data.message || 'Unknown error');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error fetching from backend Gemini API:', error);
+        return false;
+    }
+}
+
 function displayMessage(message, sender) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message', `${sender}-message`);
@@ -76,24 +135,16 @@ function displayMessage(message, sender) {
 }
 
 async function generateAiResponse(userMessage) {
-    const msg = userMessage.toLowerCase();
-    let aiResponse = "Maaf, saya belum mengerti pertanyaan Anda. Bisa coba tanyakan hal lain seputar TOEFL seperti 'skor', 'latihan', atau 'sertifikat'?";
+    let aiResponse = "Mohon maaf saat ini Ai dalam bermasalah silahkan coba kembali";
 
-    let ai = await getBotResponse(userMessage)
-    if (ai !== false){
-        aiResponse = ai
-    } else if (msg.includes('skor') || msg.includes('nilai')) {
-        aiResponse = "Tentu! Anda dapat melihat riwayat skor TOEFL Anda di halaman 'Dashboard'. Setiap tes yang selesai akan tercatat di sana.";
-    } else if (msg.includes('latihan') || msg.includes('soal')) {
-        aiResponse = "Anda bisa memulai latihan di halaman 'Latihan'. Kami menyediakan tiga sesi: Listening, Structure & Written Expression, dan Reading.";
-    } else if (msg.includes('jadwal')) {
-        aiResponse = "Platform kami menyediakan simulasi tes yang bisa Anda akses kapan saja. Untuk jadwal tes TOEFL resmi, silakan kunjungi situs ETS sebagai penyelenggara resmi.";
-    } else if (msg.includes('sertifikat')) {
-        aiResponse = "Setelah menyelesaikan tes, Anda bisa mengunduh sertifikat simulasi dari hasil tes yang ada di riwayat pada halaman 'Dashboard'.";
-    } else if (msg.includes('terima kasih') || msg.includes('makasih')) {
-        aiResponse = "Sama-sama! Senang bisa membantu. Apakah ada hal lain yang ingin Anda tanyakan?";
-    } else if (msg.includes('halo') || msg.includes('hai')) {
-        aiResponse = "Halo juga! Ada yang bisa saya bantu terkait persiapan TOEFL Anda?";
+    let gemini = await geminiAi(userMessage)
+    if (gemini !== false){
+        aiResponse = `Gemini: ${gemini}`
+    } else {
+        let ai = await getBotResponse(userMessage)
+        if (ai !== false){
+            aiResponse = `Gpt: ${ai}`
+        }
     }
 
     displayMessage(aiResponse, 'ai');

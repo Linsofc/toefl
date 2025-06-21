@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #007bff;
+    --primary-dark-color: #0056b3;
+    --background-dark: #2c3e50;
+    --card-background: #34495e;
+    --text-color-light: #ecf0f1;
+    --text-color-dark: #bdc3c7;
+    --error-color: #e74c3c;
+    --border-radius: 8px;
+    --shadow-light: rgba(0, 0, 0, 0.2);
+    --shadow-heavy: rgba(0, 0, 0, 0.4);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--background-dark), #1a252f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color-light);
+    overflow: hidden;
+}
+
+.login-container {
+    background-color: var(--card-background);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px var(--shadow-heavy);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(45deg, #1abc9c, #3498db, #9b59b6);
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0.3;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.login-container:hover::before {
+    opacity: 0.6;
+}
+
+.login-header {
+    margin-bottom: 2rem;
+}
+
+.login-header i {
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    animation: bounce 0.8s infinite alternate;
+}
+
+.login-header h2 {
+    font-size: 2rem;
+    margin: 0;
+    color: var(--text-color-light);
+    font-weight: 700;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color-dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #5d6d7e;
+    border-radius: var(--border-radius);
+    background-color: #2c3e50;
+    color: var(--text-color-light);
+    font-size: 1rem;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.login-button {
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark-color));
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+.login-button:hover {
+    background: linear-gradient(90deg, var(--primary-dark-color), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px var(--shadow-heavy);
+}
+
+.error-message {
+    color: var(--error-color);
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.error-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .login-container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .login-header i {
+        font-size: 3rem;
+    }
+
+    .login-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .input-group input {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .login-button {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+}

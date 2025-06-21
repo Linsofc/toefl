@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin TOEFL - Modern & Sleek</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="message-box" id="messageBox"></div>
+
+    <div class="admin-header">
+        <div class="admin-info">
+            <img id="adminAvatarDisplay" src="https://placehold.co/40x40/E2E8F0/64748B?text=A" alt="Admin Avatar" class="admin-avatar">
+            <span id="adminNameDisplay" class="admin-name">Admin</span>
+        </div>
+        <div class="action-buttons">
+            <button id="editAdminProfileBtn" class="edit-admin-btn">
+                <i class="fas fa-user-edit"></i> Edit Profil
+            </button>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Dashboard Admin TOEFL <i class="fas fa-user-shield"></i></h1>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Avatar</th>
+                        <th>Terakhir Diperbarui</th>
+                        <th>Riwayat TOEFL</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr>
+                        <td colspan="6">Memuat pengguna...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeEditModal">&times;</span>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group avatar-preview-container">
+                    <img id="editAvatarPreview" src="https://placehold.co/100x100/E2E8F0/64748B?text=No+Avatar" alt="Avatar Preview" class="avatar-preview">
+                </div>
+                <div class="form-group">
+                    <label for="editAvatarFile">Avatar:</label>
+                    <input type="file" id="editAvatarFile" accept="image/png, image/jpeg, image/gif">
+                </div>
+                <div class="form-group">
+                    <label for="editName">Nama:</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email:</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPassword">Password Baru (biarkan kosong jika tidak berubah):</label>
+                    <input type="password" id="editPassword" placeholder="••••••••">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="editIsAdmin">
+                    <label for="editIsAdmin">Berikan Hak Admin</label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save"><i class="fas fa-save"></i> Simpan Perubahan</button>
+                    <button type="button" class="cancel" id="cancelEditModal"><i class="fas fa-times"></i> Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editAdminProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeEditAdminModal">&times;</span>
+            <h2>Edit Profil Admin <i class="fas fa-user-cog"></i></h2>
+            <form id="editAdminProfileForm">
+                <input type="hidden" id="editAdminId">
+                <div class="form-group avatar-preview-container">
+                    <img id="editAdminAvatarPreview" src="https://placehold.co/100x100/E2E8F0/64748B?text=A" alt="Admin Avatar Preview" class="avatar-preview">
+                    <label for="editAdminAvatarFile">Ubah Avatar (unggah file):</label>
+                    <input type="file" id="editAdminAvatarFile" accept="image/png, image/jpeg, image/gif">
+                    <p class="text-sm">Ukuran maks: 2MB. Format: JPG, PNG, GIF.</p>
+                </div>
+                <div class="form-group">
+                    <label for="editAdminName">Nama:</label>
+                    <input type="text" id="editAdminName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAdminEmail">Email:</label>
+                    <input type="email" id="editAdminEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAdminPassword">Password Baru (biarkan kosong jika tidak berubah):</label>
+                    <input type="password" id="editAdminPassword" placeholder="••••••••">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save"><i class="fas fa-save"></i> Simpan Perubahan</button>
+                    <button type="button" class="cancel" id="cancelEditAdminModal"><i class="fas fa-times"></i> Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeDeleteConfirmModal">&times;</span>
+            <h2>Konfirmasi Penghapusan <i class="fas fa-exclamation-triangle"></i></h2>
+            <p class="mb-8">Apakah Anda yakin ingin menghapus pengguna <strong id="deleteUserName"></strong> secara permanen?</p>
+            <div class="form-actions">
+                <button type="button" class="delete" id="confirmDeleteBtn"><i class="fas fa-trash-alt"></i> Hapus Sekarang</button>
+                <button type="button" class="cancel" id="cancelDeleteBtn"><i class="fas fa-times"></i> Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>
