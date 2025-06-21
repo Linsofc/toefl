@@ -71,7 +71,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: false,
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production'
+    }
 }));
 
 function verifyAdmin(req, res, next) {
