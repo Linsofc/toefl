@@ -1,9 +1,8 @@
-/// asession secret
 const express = require('express');
 const { GoogleGenAI } = require("@google/genai");
 const mongoose = require('mongoose');
 const path = require('path');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); 
 const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,7 +10,7 @@ require('dotenv').config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const SESSION_SECRET = process.env.SESSION_SECRET || 'supersecretkey_for_dev';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'supersecretkey_for_dev'; 
 
 if (!MONGODB_URI) {
     console.error('ERROR: MONGODB_URI tidak ditemukan di environment variables.');
@@ -58,7 +57,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
+        this.password = await bcrypt.hash(this.password, 10); 
     }
     next();
 });
@@ -71,25 +70,13 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
+        httpOnly: false, 
         secure: process.env.NODE_ENV === 'production'
     }
 }));
-
-function verifyAuthenticated(req, res, next) {
-    if (req.session && req.session.user) {
-        next();
-    } else {
-        if (req.originalUrl.startsWith('/api')) {
-            return res.status(401).json({ message: 'Tidak terautentikasi.', type: 'error' });
-        } else {
-            return res.redirect('/login.html');
-        }
-    }
-}
 
 function verifyAdmin(req, res, next) {
     if (req.session && req.session.user && req.session.user.isAdmin) {
@@ -110,7 +97,7 @@ app.post('/api/register', async (req, res) => {
         if (existingUser) {
             return res.status(409).json({ message: 'Email sudah terdaftar.', type: 'error' });
         }
-        const newUser = new User({ name, email, password });
+        const newUser = new User({ name, email, password }); 
         await newUser.save();
         res.status(201).json({ message: 'Pendaftaran berhasil! Silakan masuk.', type: 'success' });
     } catch (error) {
@@ -136,7 +123,7 @@ app.post('/api/login', async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin 
             };
 
             res.status(200).json({
@@ -160,7 +147,7 @@ app.post('/api/logout', (req, res) => {
             console.error('Error destroying session:', err);
             return res.status(500).json({ message: 'Gagal logout.', type: 'error' });
         }
-        res.clearCookie('connect.sid');
+        res.clearCookie('connect.sid'); 
         res.status(200).json({ message: 'Logout berhasil!', type: 'success' });
     });
 });
@@ -187,15 +174,14 @@ app.post('/api/reset-password', async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         const user = await User.findOneAndUpdate(
             { email: email },
-            { $set: { password: hashedPassword } },
+            { $set: { password: hashedPassword } }, 
             { new: true }
         );
         if (!user) {
             return res.status(404).json({ message: 'Pengguna tidak ditemukan.', type: 'error' });
         }
         res.status(200).json({ message: 'Password berhasil diubah! Silakan login dengan password baru Anda.', type: 'success' });
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error resetting password:', error.message);
         res.status(500).json({ message: 'Terjadi kesalahan server saat mereset password.', type: 'error' });
     }
@@ -269,7 +255,6 @@ app.post('/api/update-profile', async (req, res) => {
         if (req.session.user && String(req.session.user.id) === String(updatedUser._id)) {
             req.session.user.name = updatedUser.name;
             req.session.user.email = updatedUser.email;
-            req.session.user.isAdmin = updatedUser.isAdmin;
         }
 
         res.status(200).json({
@@ -300,9 +285,11 @@ app.post('/api/gemini-chat', async (req, res) => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const result = await model.generateContent(message);
-        let responseText = result.text;
+        const response = await genAI.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: message,
+        });
+        let responseText = response.text;
 
         res.status(200).json({ success: true, response: responseText });
     } catch (error) {
@@ -310,24 +297,6 @@ app.post('/api/gemini-chat', async (req, res) => {
         res.status(500).json({ success: false, message: 'Gagal mendapatkan respons dari Gemini AI.', error: error.message });
     }
 });
-
-app.get('/api/user/profile', verifyAuthenticated, async (req, res) => {
-    try {
-        const user = await User.findById(req.session.user.id, '-password');
-        if (!user) {
-            req.session.destroy(err => {
-                if (err) console.error('Error destroying session for non-existent user:', err);
-                res.clearCookie('connect.sid');
-            });
-            return res.status(404).json({ message: 'Profil pengguna tidak ditemukan.', type: 'error' });
-        }
-        res.status(200).json(user);
-    } catch (error) {
-        console.error('Error fetching user profile:', error.message);
-        res.status(500).json({ message: 'Gagal mengambil data profil pengguna.', type: 'error' });
-    }
-});
-
 
 app.get('/api/current-user', verifyAdmin, async (req, res) => {
     try {
@@ -355,7 +324,7 @@ app.get('/api/current-user', verifyAdmin, async (req, res) => {
 
 app.get('/api/admin/users', verifyAdmin, async (req, res) => {
     try {
-        const users = await User.find({}, '-password');
+        const users = await User.find({}, '-password'); 
         res.status(200).json(users);
     } catch (error) {
         console.error('Error fetching all users for admin:', error.message);
@@ -365,7 +334,7 @@ app.get('/api/admin/users', verifyAdmin, async (req, res) => {
 
 app.get('/api/admin/users/:id', verifyAdmin, async (req, res) => {
     try {
-        const user = await User.findById(req.params.id, '-password');
+        const user = await User.findById(req.params.id, '-password'); 
         if (!user) {
             return res.status(404).json({ message: 'Pengguna tidak ditemukan.', type: 'error' });
         }
@@ -381,11 +350,12 @@ app.get('/api/admin/users/:id', verifyAdmin, async (req, res) => {
 
 
 app.put('/api/admin/users/:id', verifyAdmin, async (req, res) => {
-    const { name, email, password, avatar, isAdmin } = req.body;
+    const { name, email, password, avatar, isAdmin } = req.body; 
     const userId = req.params.id;
 
     try {
         if (String(req.session.user.id) === String(userId)) {
+            // Belum Diperlukan Saat Ini
         }
 
         if (email) {
@@ -395,15 +365,15 @@ app.put('/api/admin/users/:id', verifyAdmin, async (req, res) => {
             }
         }
 
-        const updateData = { name, email, avatar, isAdmin };
+        const updateData = { name, email, avatar, isAdmin }; 
         if (password && password.trim() !== '') {
-            updateData.password = await bcrypt.hash(password, 10);
+            updateData.password = await bcrypt.hash(password, 10); 
         }
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { $set: updateData },
-            { new: true, runValidators: true, select: '-password' }
+            { new: true, runValidators: true, select: '-password' } 
         );
 
         if (!updatedUser) {
@@ -413,7 +383,7 @@ app.put('/api/admin/users/:id', verifyAdmin, async (req, res) => {
         if (req.session.user && String(req.session.user.id) === String(updatedUser._id)) {
             req.session.user.name = updatedUser.name;
             req.session.user.email = updatedUser.email;
-            req.session.user.isAdmin = updatedUser.isAdmin;
+            req.session.user.isAdmin = updatedUser.isAdmin; 
         }
 
         res.status(200).json({ message: 'Pengguna berhasil diperbarui!', type: 'success', updatedUser });
@@ -446,18 +416,6 @@ app.delete('/api/admin/users/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-app.get('/login.html', (req, res) => {
-    if (req.session.user) {
-        return res.redirect('/dashboard.html');
-    }
-    res.sendFile(path.join(__dirname, '../public/login.html'));
-});
-
-app.get('/dashboard.html', verifyAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/dashboard.html'));
-});
-
-
 app.get('/admin_login.html', (req, res) => {
     if (req.session.user && req.session.user.isAdmin) {
         return res.redirect('/admin.html');
@@ -481,6 +439,5 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.listen(PORT, () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
-    console.log(`Akses Login Umum di: http://localhost:${PORT}/login.html`);
     console.log(`Akses Login Admin di: http://localhost:${PORT}/admin_login.html`);
 });
