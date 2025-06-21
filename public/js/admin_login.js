@@ -30,7 +30,7 @@ loginForm.addEventListener('submit', async function(event) {
         const data = await response.json();
 
         if (response.ok && data.type === 'success') {
-            if (data.user.isAdmin) {
+            if (data.user.isAdmin === true) {
                 window.location.href = '/admin.html';
             } else {
                 errorMessage.textContent = 'Login berhasil, tetapi Anda bukan admin. Akses dashboard admin ditolak.';
