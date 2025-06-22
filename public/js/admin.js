@@ -100,7 +100,8 @@ async function fetchCurrentAdminData() {
             return null;
         }
         const admin = await response.json();
-        loggedInAdminData = admin;
+        const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+        loggedInAdminData = admin || loggedInUser;
         adminNameDisplay.textContent = admin.name;
         adminAvatarDisplay.src =
             admin.avatar || "https://placehold.co/40x40/E2E8F0/64748B?text=A";
