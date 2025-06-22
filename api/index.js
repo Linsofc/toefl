@@ -439,7 +439,4 @@ app.get('/', (req, res) => {
 
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-    console.log(`Akses Login Admin di: http://localhost:${PORT}/admin_login.html`);
-});
+module.exports = app;
