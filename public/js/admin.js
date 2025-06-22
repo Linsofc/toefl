@@ -35,11 +35,12 @@ const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const deleteUserNameSpan = document.getElementById("deleteUserName");
 const messageBox = document.getElementById("messageBox");
 const loadingOverlay = document.getElementById("loadingOverlay");
+const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
 let userToDeleteId = null;
 let currentAvatarBase64 = null; 
 let currentAdminAvatarBase64 = null; 
-let loggedInAdminData = null; 
+let loggedInAdminData = loggedInUser; 
 function showMessage(message, type = "success") {
     messageBox.textContent = message;
     messageBox.className = "message-box show";
@@ -100,7 +101,6 @@ async function fetchCurrentAdminData() {
             return null;
         }
         const admin = await response.json();
-        const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
         loggedInAdminData = admin?.name !== undefined ? admin : loggedInUser;
         adminNameDisplay.textContent = admin.name;
         adminAvatarDisplay.src =
