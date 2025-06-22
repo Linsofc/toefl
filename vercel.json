@@ -1,7 +1,5 @@
 {
     "version": 2,
-    "cleanUrls": true,
-    "trailingSlash": false,
     "builds": [
         {
             "src": "api/index.js",
@@ -19,7 +17,7 @@
         },
         {
             "src": "/admin",
-            "dest": "/public/admin_login.html"
+            "dest": "/public/admin.html"
         },
         {
             "src": "/admin_login.html",
